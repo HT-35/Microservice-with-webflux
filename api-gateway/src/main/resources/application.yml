@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: service1
+          uri: ${SPRING_CLOUD_GATEWAY_ROUTES_0_URI:http://localhost:8081}
+          predicates:
+            - Path=/service1/**
+          filters:
+            - StripPrefix=1
+        - id: service2
+          uri: ${SPRING_CLOUD_GATEWAY_ROUTES_1_URI:http://localhost:8082}
+          predicates:
+            - Path=/service2/**
+          filters:
+            - StripPrefix=1

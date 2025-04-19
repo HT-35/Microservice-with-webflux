@@ -1,0 +1,2 @@
+rootProject.name = 'microservice-project'
+include 'api-gateway', 'service1', 'service2'

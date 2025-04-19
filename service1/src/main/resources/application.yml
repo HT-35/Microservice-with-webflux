@@ -1,0 +1,9 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: service1
+
+service2:
+  url: ${SERVICE2_URL:http://localhost:8082}

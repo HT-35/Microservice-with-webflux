@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_ID=service1
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://service1:8081
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0=Path=/service1/**
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_FILTERS_0=StripPrefix=1
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_ID=service2
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://service2:8082
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0=Path=/service2/**
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_FILTERS_0=StripPrefix=1
+    depends_on:
+      - service1
+      - service2
+    networks:
+      - microservice-network
+
+  service1:
+    build: ./service1
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+      - SERVICE2_URL=http://service2:8082
+    networks:
+      - microservice-network
+
+  service2:
+    build: ./service2
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      - SERVICE1_URL=http://service1:8081
+    networks:
+      - microservice-network
+
+networks:
+  microservice-network:
+    driver: bridge
